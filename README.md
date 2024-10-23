@@ -26,7 +26,7 @@ curl --proto '=https' --tlsv1.2 -sSfL "https://raw.githubusercontent.com/gitpod-
 Add the following line to your gitpod Dockerfile and push to your repository:
 
 ```dockerfile
-ENV PW_TEST_CONNECT_WS_ENDPOINT=ws://127.0.0.1:3000
+ENV PW_TEST_CONNECT_WS_ENDPOINT=ws://127.0.0.1:9999
 ```
 
 This only needs to be done once and by someone who maintains the Gitpod configuration files.
