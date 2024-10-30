@@ -16,6 +16,7 @@ function selfinstall() {
 		"${___MAIN_FUNCNAME}"' "$@";' >"${script_path}"
 	chmod +x "${script_path}"
 
+	mkdir -p -m 0755 "$HOME/Library/LaunchAgents"
 	cat >"${startup_plist}" <<EOF
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
