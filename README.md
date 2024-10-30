@@ -18,7 +18,7 @@ gitpod login --host gitpod.io
 After you're logged in to Gitpod. Run this final command:
 
 ```bash
-curl --proto '=https' --tlsv1.2 -sSfL "https://raw.githubusercontent.com/gitpod-samples/playwright-local-server/8198e73/gitpod-autopwf" | /opt/homebrew/bin/bash -s selfinstall
+curl --proto '=https' --tlsv1.2 -sSfL "https://raw.githubusercontent.com/gitpod-samples/playwright-local-server/35875ec/gitpod-autopwf" | /opt/homebrew/bin/bash -s selfinstall
 ```
 
 # Setup
