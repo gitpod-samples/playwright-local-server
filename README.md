@@ -12,7 +12,7 @@ Open a terminal on your MacBook and run following commands. This will install no
 brew install gitpod-io/tap/gitpod bash
 ! which npm && brew install node
 
-gitpod login --host gitpod.io # change the host to your enterprise instance if needed
+gitpod login --host gitpod.io
 ```
 
 After you're logged in to Gitpod. Run this final command:
