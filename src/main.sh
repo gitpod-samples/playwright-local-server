@@ -1,4 +1,10 @@
 function selfinstall() {
+	echo "INFO: requesting sudo privileges to install playwright dependencies..."
+	sudo chown -R "$(id -un)":"$(id -gn)" "$HOME/.npm"
+	sudo env PATH="$PATH" npx --yes playwright install-deps
+	npm install @playwright/test
+	npx --yes playwright install
+
 	local id=com.gitpodsupport.autopwf
 	local startup_plist="$HOME/Library/LaunchAgents/${id}.plist"
 	local script_path="$HOME/.gitpod-autopwf"
@@ -22,7 +28,14 @@ function selfinstall() {
     <key>EnvironmentVariables</key>
     <dict>
         <key>PATH</key>
-        <string>${PATH}</string>
+        <string>${PATH}:/opt/homebrew/bin</string>
+    </dict>
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+ 	     <false/>
+ 	     <key>Crashed</key>
+ 	     <true/>
     </dict>
     <key>RunAtLoad</key>
     <true/>
@@ -48,15 +61,16 @@ function main() {
 		return 0
 	}; fi
 
-	local lockfile=/tmp/.gp_auto_forward
+	# local lockfile=/tmp/.gp_auto_forward
 
 	# Ensure no more than one instance is running
-	if ! mkdir ${lockfile} 2>/dev/null; then {
-		echo "ERROR: another instance is already locked"
-		return 1
-	}; fi
-	local trap_str="rmdir ${lockfile}"
-	trap "${trap_str}" EXIT SIGINT
+	# if ! mkdir ${lockfile} 2>/dev/null; then {
+	# 	echo "ERROR: another instance is already locked"
+	# 	return 1
+	# }; fi
+	# local trap_str="rmdir ${lockfile}"
+	local trap_str
+	# trap "${trap_str}" EXIT SIGINT
 
 	if ! command -v gitpod 1>/dev/null; then {
 		echo "ERROR: gitpod CLI is not installed. Please install it via something like brew"
@@ -73,16 +87,18 @@ function main() {
 	local pw_port=9999
 	local ssh_daemons=()
 	local workspaces_store=()
-	npx playwright run-server --port ${pw_port} --host 0.0.0.0 &
-	trap_str+="; for p in $! \${ssh_daemons[@]}; do kill -9 \$p; done"
+	local pw_cmd=(playwright run-server --port 9999 --host 0.0.0.0)
+	pkill -9 -f "${pw_cmd[*]}" || :
+	npx "${pw_cmd[@]}" &
+	trap_str+="for p in $! \${ssh_daemons[@]}; do kill -9 \$p; done"
 	trap "${trap_str}" EXIT SIGINT
 
 	while sleep 2; do
 		while read -r workspace; do {
 			if [[ ! "${workspaces_store[*]}" =~ (^| )${workspace}($| ) ]]; then {
-				workspaces_store+=("$workspace")
-				echo $workspace
-				$(gitpod workspace ssh ${workspace} --dry-run) -R ${pw_port}:localhost:${pw_port} -N &
+				workspaces_store+=("${workspace}")
+				echo "${workspace}"
+				$(gitpod workspace ssh "${workspace}" --dry-run) -R ${pw_port}:localhost:${pw_port} -N &
 				ssh_daemons+=($!)
 			}; fi
 		}; done < <(
