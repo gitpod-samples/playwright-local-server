@@ -11,8 +11,6 @@ Open a terminal on your MacBook and run following commands. This will install no
 ```bash
 brew install gitpod-io/tap/gitpod bash
 ! which npm && brew install node
-echo "INFO: requesting sudo password...."
-sh -c 'sudo chown -R $(id -un):$(id -gn) "$HOME/.npm"; sudo env PATH="$PATH" npx --yes playwright install-deps && npm install @playwright/test && npx --yes playwright install'
 
 gitpod login --host gitpod.io # change the host to your enterprise instance if needed
 ```
