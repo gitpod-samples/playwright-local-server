@@ -1,6 +1,8 @@
 function selfinstall() {
 	echo "INFO: requesting sudo privileges to install playwright dependencies..."
-	sudo chown -R "$(id -un)":"$(id -gn)" "$HOME/.npm"
+	if test -e "$HOME/.npm"; then
+		sudo chown -R "$(id -un)":"$(id -gn)" "$HOME/.npm"
+	fi
 	sudo env PATH="$PATH" npx --yes playwright install-deps
 	npm install @playwright/test
 	npx --yes playwright install
