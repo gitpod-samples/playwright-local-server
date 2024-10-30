@@ -3,8 +3,8 @@ function selfinstall() {
 	if test -e "$HOME/.npm"; then
 		sudo chown -R "$(id -un)":"$(id -gn)" "$HOME/.npm"
 	fi
-	sudo env PATH="$PATH" npx --yes playwright install-deps
 	npm install @playwright/test
+	sudo env PATH="$PATH" npx --yes playwright install-deps
 	npx --yes playwright install
 
 	local id=com.gitpodsupport.autopwf
